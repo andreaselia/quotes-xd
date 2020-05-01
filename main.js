@@ -6,7 +6,7 @@ async function randomQuote() {
         const response = await fetch("https://api.quotable.io/random");
         return response.json();
     } catch (ex) {
-        error("The quotes API or your network connection is currently be unavailable.");
+        error("Unable to perform operation", "The quotes API or your network connection is currently be unavailable.");
         throw ex;
     }
 }
