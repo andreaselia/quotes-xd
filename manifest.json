@@ -1,23 +1,43 @@
 {
-  "name" : "Quotes",
-  "host" : {
-    "app" : "XD",
-    "minVersion" : "21.0"
-  },
-  "id" : "2d72be14",
-  "icons" : [ {
-    "path" : "images/icon@1x.png",
-    "width" : 24,
-    "height" : 24
-  }, {
-    "path" : "images/icon@2x.png",
-    "width" : 48,
-    "height" : 48
-  } ],
-  "uiEntryPoints" : [ {
-    "label" : "Get Quote",
-    "type" : "menu",
-    "commandId" : "getQuote"
-  } ],
-  "version" : "1.0.0"
+    "name" : "Quotes",
+    "host" : {
+        "app" : "XD",
+        "minVersion" : "21.0"
+    },
+    "id" : "2d72be14",
+    "icons" : [
+        {
+            "path" : "images/icon@1x.png",
+            "width" : 24,
+            "height" : 24
+        }, {
+        "path" : "images/icon@2x.png",
+        "width" : 48,
+        "height" : 48
+        }
+    ],
+    "uiEntryPoints" : [
+        {
+            "label" : "Get Quote",
+            "type" : "menu",
+            "menuItems": [
+                {
+                    "type": "menu",
+                    "label": "Quick Quote",
+                    "commandId" : "quickQuote"
+                },
+                {
+                    "type": "menu",
+                    "label": "Fill with a Quote",
+                    "commandId" : "fillQuote"
+                },
+                {
+                    "type": "menu",
+                    "label": "Shuffle Quote",
+                    "commandId" : "shuffleQuote"
+                }
+            ]
+        }
+    ],
+    "version" : "1.0.0"
 }
