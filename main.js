@@ -2,21 +2,20 @@ const { Text, Color } = require("scenegraph");
 const { alert, error } = require("./lib/dialogs.js");
 
 async function randomQuote() {
-    const response = await fetch("https://api.quotable.io/random");
-    const data = await response.json();
-    return data;
+    try {
+        const response = await fetch("https://api.quotable.io/random");
+        return response.json();
+    } catch (ex) {
+        error("The quotes API or your network connection is currently be unavailable.");
+        throw "The quotes API or your network connection is currently be unavailable.";
+    }
 }
 
 async function quickQuoteHandlerFunction(selection) {
-    try {
-        const quote = await randomQuote();
-    } catch (ex) {
-        await error("Please check your network connection.");
-        return;
-    }
+    const { content, author } = await randomQuote();
 
     const node = new Text();
-    node.text = `${quote.content} - ${quote.author}`;
+    node.text = `${content} - ${author}`;
     node.fill = new Color().clone();
     node.fontSize = 18;
     node.areaBox = { width: 800, height: 200 };
@@ -26,40 +25,29 @@ async function quickQuoteHandlerFunction(selection) {
 }
 
 async function fillQuoteHandlerFunction(selection) {
-    let quote = '';
+    let candidateItems = 0;
 
-    try {
-        quote = await randomQuote();
-    } catch (ex) {
-        await error("Please check your network connection.");
-        return;
+    const items = selection.items;
+
+    for (let i = items.length - 1; i >= 0; i--) {
+        let item = items[i];
+
+        if (! item instanceof Text) {
+            continue;
+        }
+
+        candidateItems++;
+
+        const text = item.text;
+        const length = text.length;
+
+        const { content, author } = await randomQuote();
+        item.text = `${content} - ${author}`;
     }
 
-    let candidateItems = 0;
-    let affectedItems = 0;
-
-    selection.items.filter(item => item instanceof Text)
-        .forEach(item => {
-            candidateItems++;
-
-            const text = item.text;
-            const length = text.length;
-
-            item.text = `${quote.content} - ${quote.author}`;
-
-            affectedItems++;
-        });
-
-    if (candidateItems === 0 || affectedItems === 0) {
-        if (selection.items.length === 0 || candidateItems === 0) {
-            alert(selection.items.length === 0 ? "Nothing selected..." : "No operable items selected...", "Be sure to select one or more text items.");
-            return;
-        }
-
-        if (candidateItems > affectedItems) {
-            error("No operable items selected...");
-            return;
-        }
+    if (selection.items.length === 0 || candidateItems === 0) {
+        alert("Unable to perform operation", "Be sure to select one or more text items.");
+        return;
     }
 }
 
